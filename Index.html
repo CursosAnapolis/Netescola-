@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetEscola - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>NetEscola</h1>
+            </div>
+            <p class="subtitle">Plataforma de conteúdos didáticos da rede pública estadual de ensino</p>
+        </header>
+
+        <main>
+            <div class="welcome-section">
+                <h2>Olá, seja bem-vindo!</h2>
+                <p>Aqui você encontra videoaulas, materiais, atividades e listas de exercícios produzidas pelos professores da Secretaria de Estado de Educação.</p>
+                <p class="highlight">Agora ficou muito mais fácil aprender pela Internet! Vamos juntos?</p>
+            </div>
+
+            <div class="login-container">
+                <div class="login-header">
+                    <h3><i class="fas fa-lock"></i> Acessar</h3>
+                    <p class="access-note">O sistema só permite acesso a usuários da rede estadual.</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username"><i class="fas fa-user"></i> Usuário</label>
+                        <input type="text" id="username" name="username" 
+                               placeholder="ex: erik.silva40@aluno.educa.go.gov.br" required>
+                        <div class="hint">Use seu e-mail institucional</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-key"></i> Senha</label>
+                        <input type="password" id="password" name="password" 
+                               placeholder="Senha do seu e-mail institucional" required>
+                        <div class="hint">A mesma senha do seu e-mail @aluno.educa.go.gov.br</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-login">
+                            <i class="fas fa-sign-in-alt"></i> Logar
+                        </button>
+                        
+                        <div class="links">
+                            <a href="#" id="forgotPassword">
+                                <i class="fas fa-question-circle"></i> Não tenho senha / Esqueci a senha
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="info-box">
+                    <p><i class="fas fa-info-circle"></i> <strong>Importante:</strong> Use as mesmas credenciais do seu e-mail institucional da rede estadual.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Secretaria de Estado de Educação &copy; 2024</p>
+            <p class="footer-note">Plataforma educacional para alunos da rede pública estadual</p>
+        </footer>
+    </div>
+
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Validando credenciais...</p>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
